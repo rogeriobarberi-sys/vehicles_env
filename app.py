@@ -58,8 +58,8 @@ fig_liq = px.bar(liquidity_df, x='days_listed', y='type', orientation='h',
                  color='days_listed', color_continuous_scale='Bluered_r')
 st.plotly_chart(fig_liq, use_container_width=True)
 
-#4.5 ANÁLISE DE CONSERVAÇÃO Vs TEMPO
-st.header("5. ⚡ Agilidade de Venda por Estado de Conservação")
+#5 ANÁLISE DE CONSERVAÇÃO Vs TEMPO
+st.header("2. ⚡ Agilidade de Venda por Estado de Conservação")
 st.markdown("Será que carros em melhor estado vendem mais rápido? O gráfico abaixo mostra a distribuição do tempo de anúncio para cada condição.")
 
 fig_cond_time = px.strip(filtered_df, x='condition', y='days_listed', color='condition',
@@ -69,8 +69,8 @@ st.plotly_chart(fig_cond_time, use_container_width=True)
 
 st.info("**Conclusão:** Observe se há uma concentração maior de pontos na parte inferior para condições específicas. Isso indica um giro de estoque mais acelerado para esse perfil de veículo.")
 
-# 5. ESTRUTURA DE PREÇOS (COM TOGGLE)
-st.header("2. 📊 Análise de Precificação")
+# 5.5 ESTRUTURA DE PREÇOS (COM TOGGLE)
+st.header("3. 📊 Análise de Precificação")
 show_by_make = st.toggle("Alternar Visão: Por Marca vs. Por Condição", value=False)
 
 if show_by_make:
@@ -86,7 +86,7 @@ else:
 st.plotly_chart(fig_price, use_container_width=True)
 
 # 6. VALOR AGREGADO: 4X4 E CORES (ABAS)
-st.header("3. 🔍 Fatores de Valorização")
+st.header("4. 🔍 Fatores de Valorização")
 tab_4wd, tab_color = st.tabs(["Impacto do 4x4", "Influência da Cor"])
 
 with tab_4wd:
@@ -102,7 +102,7 @@ with tab_color:
     st.plotly_chart(fig_color, use_container_width=True)
 
 # 7. CICLO DE VIDA E TEMPO (O GRÁFICO DE BOLINHAS E LINHAS)
-st.header("4. 📉 Ciclo de Vida e Depreciação")
+st.header("5. 📉 Ciclo de Vida e Depreciação")
 col_scat, col_line = st.columns(2)
 
 with col_scat:
