@@ -1,34 +1,60 @@
-# US Vehicle Market - Strategic Data Analysis Dashboard
+# 🚗 US Vehicle Market - Strategic Analysis Dashboard
 
-An advanced Exploratory Data Analysis (EDA) web application built with **Streamlit** and **Plotly**. This project goes beyond basic visualization, implementing robust data cleaning and statistical imputation to provide reliable market insights.
+A **Business Intelligence** web application built with **Streamlit** and **Plotly**. This project transforms a raw dataset of automotive advertisements into a decision-making tool, using advanced data engineering techniques and dynamic interactive visualizations.
 
 ## 🚀 Live Demo
-https://vehicles-env-1niq.onrender.com
+[https://vehicles-env-1niq.onrender.com](https://vehicles-env-1niq.onrender.com)
 
-## 🛠 Tech Stack
-- **Python** (Pandas, Pathlib)
-- **Streamlit** (Web Interface & Deployment)
-- **Plotly Express** (Interactive Graphics)
-- **Render** (Cloud Hosting)
+---
+
+## 🛠 Technologies Used
+* **Python 3.12** (Project Core)
+* **Pandas** (Manipulation and Statistical Imputation)
+* **Streamlit** (Web Interface and Dashboard Deployment)
+* **Plotly Express** (Dynamic Interactive Visualizations)
+* **Render** (Hosting and CI/CD via GitHub)
+
+---
 
 ## 📊 Data Engineering & Cleaning (Professional Approach)
 
-To ensure high-quality analysis and maintain a professional-grade portfolio, the following data integrity steps were implemented:
+Data integrity is the foundation of reliable insights. I implemented a cleaning pipeline that avoids discarding valuable information:
 
-### 1. Robust Data Imputation (Group-based)
-Instead of simply dropping rows with missing values, I applied a **context-aware imputation** strategy:
-- **Model Year & Cylinders:** Missing values were filled using the **median** value of each specific vehicle `model`. This preserves the characteristic distribution of each car type.
-- **Odometer:** Missing mileage was imputed based on the **median** for the corresponding `model_year`, reflecting the logical correlation between a car's age and its usage.
-- **Boolean Features:** The `is_4wd` column was standardized, treating nulls as `0` (False) based on the dataset's structure.
+### 1. Group-based Statistical Imputation
+To avoid the bias of simply deleting incomplete rows, I used **contextual imputation**:
+* **Model Year and Cylinders:** Missing values were filled using the **median per model** (`groupby('model')`), ensuring a sedan doesn't receive truck specifications.
+* **Odometer:** Mileage was imputed based on the **median of the model year**, respecting the natural correlation between age and usage.
+* **Boolean Normalization:** The `is_4wd` column was standardized (nulls to `0`), enabling precise binary analysis of vehicle valuation.
 
-### 2. Feature Engineering & Defensive Programming
-- **Brand Extraction:** Extracted vehicle brands from the model strings to allow high-level market segmentation and brand-specific analysis.
-- **Pathlib Integration:** Implemented robust file path resolution using `pathlib` for seamless deployment on Render/GitHub environments.
-- **Data Typing:** Enforced strict numeric typing for `price`, `odometer`, and `model_year` to prevent runtime errors during interactive filtering.
+### 2. Defensive Programming & Optimization
+* **Path Resolution (Pathlib):** The system automatically detects the environment (Local vs. Render) to locate `.csv` files, eliminating directory-related errors.
+* **Data Caching (`@st.cache_data`):** Implemented caching so that loading and processing over 51,000 rows occurs only once, making the user experience instantaneous.
 
-### 3. Advanced Visualization & Business Logic
-- **Depreciation Analysis:** A scatter plot with a "Condition" overlay to visualize how wear and tear affects resale value.
-- **Market Liquidity Analysis:** Calculated the "Time-to-Sell" (Days Listed) for each vehicle category, identifying which types have the highest turnover.
-- **Outlier Detection:** Used Boxplots to identify price outliers and distribution consistency across different vehicle types.
+
+
+---
+
+## 📈 Implemented Business Analyses
+
+The dashboard was designed to answer strategic market questions:
+
+* **Value-Added Analysis (4x4):** We measured the financial impact of all-wheel drive on resale prices using **Boxplots**, identifying medians and price dispersion (outliers).
+* **Mileage Impact (Depreciation):** Interactive scatter plots correlating vehicle usage with value, segmented by condition (Excellent, Good, Fair).
+* **Market Liquidity Analysis:** Study of `days_listed` to understand which price ranges and vehicle types have the highest inventory turnover.
+* **Temporal Trend Curve:** Line charts demonstrating average price variation by manufacturing year, essential for understanding annual depreciation.
+
+---
 
 ## 📁 Repository Structure
+* `app.py`: Main Streamlit application code.
+* `notebooks/EDA.ipynb`: Detailed exploratory analysis and cleaning drafts.
+* `vehicles_us.csv`: Database (referenced in the root directory).
+* `requirements.txt`: List of dependencies for the production environment.
+
+---
+
+### 💡 How to run this project locally
+1. Clone the repository.
+2. Create a virtual environment: `python -m venv env`.
+3. Activate the environment and install dependencies: `pip install -r requirements.txt`.
+4. Run the app: `streamlit run app.py`.

@@ -1,34 +1,60 @@
-# Mercado de Veículos EUA - Dashboard de Análise Estratégica
+# 🚗 Mercado de Veículos EUA - Dashboard de Análise Estratégica
 
-Uma aplicação web avançada de Análise Exploratória de Dados (EDA) construída com **Streamlit** e **Plotly**. Este projeto vai além da visualização básica, implementando limpeza de dados robusta e imputação estatística para fornecer insights de mercado confiáveis.
+Uma aplicação web de **Business Intelligence** construída com **Streamlit** e **Plotly**. Este projeto transforma um dataset bruto de anúncios automotivos em uma ferramenta de decisão, utilizando técnicas avançadas de engenharia de dados e visualização interativa.
 
 ## 🚀 Demonstração ao Vivo
-https://vehicles-env-1niq.onrender.com
+[https://vehicles-env-1niq.onrender.com](https://vehicles-env-1niq.onrender.com)
+
+---
 
 ## 🛠 Tecnologias Utilizadas
-- **Python** (Pandas, Pathlib)
-- **Streamlit** (Interface Web e Implementação)
-- **Plotly Express** (Gráficos Interativos)
-- **Render** (Hospedagem em Nuvem)
+* **Python 3.12** (Core do projeto)
+* **Pandas** (Manipulação e Imputação Estatística)
+* **Streamlit** (Interface Web e Deploy de Dashboards)
+* **Plotly Express** (Visualizações Interativas Dinâmicas)
+* **Render** (Hospedagem e CI/CD via GitHub)
+
+---
 
 ## 📊 Engenharia e Limpeza de Dados (Abordagem Profissional)
 
-Para garantir uma análise de alta qualidade e manter padrões de um portfólio profissional, as seguintes etapas de integridade de dados foram implementadas:
+A integridade dos insights depende da qualidade dos dados. Implementei um pipeline de limpeza que evita o descarte de informações valiosas:
 
-### 1. Imputação de Dados Robusta (Baseada em Grupos)
-Em vez de simplesmente descartar linhas com valores ausentes, apliquei uma estratégia de **imputação contextual**:
-- **Ano do Modelo e Cilindros:** Valores ausentes foram preenchidos usando a **mediana** de cada `modelo` de veículo específico. Isso preserva a distribuição característica de cada tipo de carro.
-- **Odômetro:** A quilometragem ausente foi imputada com base na **mediana** do `ano_do_modelo` correspondente, refletindo a correlação lógica entre a idade do carro e seu uso.
-- **Atributos Booleanos:** A coluna `is_4wd` foi padronizada, tratando nulos como `0` (Falso) com base na estrutura do conjunto de dados.
+### 1. Imputação de Dados Contextual (Group-based Imputation)
+Para evitar o viés de simplesmente deletar linhas incompletas, utilizei a **imputação estatística**:
+* **Ano do Modelo e Cilindros:** Valores ausentes foram preenchidos usando a **mediana por modelo** (`groupby('model')`), garantindo que um sedan não receba especificações de um caminhão.
+* **Odômetro:** A quilometragem foi imputada com base na **mediana do ano do modelo**, respeitando a correlação natural entre idade e uso.
+* **Tratamento de Booleanos:** A coluna `is_4wd` foi normalizada (nulos para `0`), permitindo análises binárias precisas de valorização.
 
-### 2. Engenharia de Atributos e Programação Defensiva
-- **Extração de Marcas:** Extraí as marcas dos veículos a partir das strings de modelo para permitir segmentação de mercado e análises por fabricante.
-- **Integração Pathlib:** Implementação de resolução de caminhos de arquivo robusta usando `pathlib` para garantir o funcionamento perfeito no Render/GitHub.
-- **Tipagem de Dados:** Aplicação de tipagem numérica rigorosa para `preço`, `odômetro` e `ano_do_modelo` para evitar erros durante a filtragem interativa.
+### 2. Programação Defensiva e Otimização
+* **Resolução de Caminhos (Pathlib):** O sistema detecta automaticamente o ambiente (Local vs Render) para localizar os arquivos `.csv`, eliminando erros de diretório.
+* **Cache de Dados (`@st.cache_data`):** Implementação de cache para que o carregamento e processamento de 51.525 linhas ocorram apenas uma vez, tornando a experiência do usuário instantânea.
 
-### 3. Visualização Avançada e Lógica de Negócio
-- **Análise de Depreciação:** Gráfico de dispersão com sobreposição de "Condição" para visualizar como o desgaste afeta o valor de revenda.
-- **Análise de Liquidez de Mercado:** Calculamos o "Tempo de Venda" (Days Listed) para cada categoria de veículo, identificando quais tipos têm o maior giro de estoque.
-- **Detecção de Outliers:** Uso de Boxplots para identificar discrepâncias de preço e consistência de distribuição entre diferentes categorias.
+
+
+---
+
+## 📈 Análises de Negócio Implementadas
+
+O dashboard foi projetado para responder a perguntas estratégicas de mercado:
+
+* **Análise de Valor Agregado (4x4):** Medimos o impacto financeiro da tração integral no preço de revenda usando **Boxplots**, permitindo identificar a mediana e a dispersão de preços (outliers).
+* **Impacto da Quilometragem (Depreciação):** Gráficos de dispersão interativos que correlacionam o uso do veículo com o seu valor, segmentados por condição (Excellent, Good, Fair).
+* **Análise de Liquidez (Tempo de Venda):** Estudo de `days_listed` para entender quais faixas de preço e tipos de veículos possuem o maior giro de estoque.
+* **Curva de Tendência Temporal:** Gráficos de linha que demonstram a variação do preço médio conforme o ano de fabricação, essencial para entender a depreciação anual.
+
+---
 
 ## 📁 Estrutura do Repositório
+* `app.py`: Código principal da aplicação Streamlit.
+* `notebooks/EDA.ipynb`: Análise exploratória detalhada e rascunhos de limpeza.
+* `vehicles_us.csv`: Base de dados (referenciada na raiz).
+* `requirements.txt`: Lista de dependências para o ambiente de produção.
+
+---
+
+### 💡 Como rodar este projeto localmente
+1. Clone o repositório.
+2. Crie um ambiente virtual: `python -m venv env`.
+3. Ative o ambiente e instale as dependências: `pip install -r requirements.txt`.
+4. Execute o app: `streamlit run app.py`.

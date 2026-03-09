@@ -2,8 +2,8 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# 1. CONFIGURAÇÃO E CARREGAMENTO
-st.set_page_config(page_title="Data Auto Insights", layout="wide")
+# 1. CONFIGURAÇÃO DA PÁGINA
+st.set_page_config(page_title="Análise de Mercado Automotivo", layout="wide")
 
 @st.cache_data
 def get_data():
@@ -12,88 +12,85 @@ def get_data():
     except FileNotFoundError:
         data = pd.read_csv('vehicles.csv')
     
-    # Tratamento de dados para evitar erros nos gráficos
+    # Tratamento e Imputação de Dados
     data['is_4wd'] = data['is_4wd'].fillna(0).astype(int)
     data['paint_color'] = data['paint_color'].fillna('Não especificada')
-    data['model_year'] = data['model_year'].fillna(df['model_year'].median()) if 'df' in locals() else data['model_year']
+    data['type'] = data['type'].fillna('other')
+    data['model_year'] = data['model_year'].fillna(data['model_year'].median())
     return data
 
 df = get_data()
 
-# 2. CABEÇALHO
-st.title("🚗 Análise Avançada de Mercado Automotivo")
-st.markdown("---")
+# 2. INTRODUÇÃO E OBJETIVOS
+st.title("🚗 Dashboard Estratégico: Mercado de Veículos Usados")
+st.markdown("""
+Este painel apresenta uma análise exploratória avançada sobre o mercado automotivo, focando em fatores de precificação, 
+depreciação e liquidez. O objetivo é fornecer insights baseados em dados para otimização de inventário e estratégias de venda.
+""")
+st.divider()
 
-# 3. FILTROS NA BARRA LATERAL (Interatividade Avançada)
-st.sidebar.header("Painel de Controle")
-selected_make = st.sidebar.multiselect("Selecione Marcas Específicas", 
-                                      options=sorted(df['model'].str.split().str[0].unique()),
-                                      default=[])
+# 3. FILTROS E CONTROLES
+st.sidebar.header("Parâmetros de Pesquisa")
+price_limit = st.sidebar.slider("Filtrar por Preço Máximo ($)", 500, 100, 150000, value=50000)
+filtered_df = df[df['price'] <= price_limit]
 
-price_limit = st.sidebar.slider("Filtrar por Preço Máximo ($)", 500, 100, 50000)
+# 4. ANÁLISE DE LIQUIDEZ (Giro de Estoque)
+st.header("1. 📈 Liquidez de Mercado: Giro de Estoque por Categoria")
+st.markdown("""
+A análise de liquidez identifica quais categorias de veículos saem do estoque mais rápido. 
+Menos tempo listado (**Days Listed**) indica maior demanda relativa no mercado.
+""")
 
-# Filtragem lógica
-if selected_make:
-    mask = (df['model'].str.startswith(tuple(selected_make))) & (df['price'] <= price_limit)
-else:
-    mask = df['price'] <= price_limit
+liquidity_df = filtered_df.groupby('type')['days_listed'].mean().sort_values(ascending=False).reset_index()
+fig_liq = px.bar(liquidity_df, x='days_listed', y='type', orientation='h',
+                 title="Média de Dias no Anúncio por Tipo de Veículo",
+                 labels={'days_listed': 'Média de Dias para Venda', 'type': 'Categoria'},
+                 color='days_listed',
+                 color_continuous_scale='Bluered_r')
+st.plotly_chart(fig_liq, use_container_width=True)
 
-filtered_df = df[mask]
-
-# 4. GRÁFICOS LADO A LADO (LAYOUT PROFISSIONAL)
+# 5. DISTRIBUIÇÃO E PRECIFICAÇÃO
+st.header("2. 📊 Estrutura de Preços e Valor Agregado")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("📊 Distribuição de Preço")
-    fig1 = px.histogram(filtered_df, x="price", color="condition", nbins=50,
-                       title="Preço vs Condição",
-                       labels={'price': 'Preço ($)', 'count': 'Frequência'})
-    st.plotly_chart(fig1, use_container_width=True)
+    st.subheader("Distribuição por Condição")
+    fig_hist = px.histogram(filtered_df, x="price", color="condition", nbins=50,
+                           title="Histograma de Preços vs. Estado do Veículo",
+                           labels={'price': 'Preço ($)', 'count': 'Frequência'})
+    st.plotly_chart(fig_hist, use_container_width=True)
 
 with col2:
-    st.subheader("📈 Preço vs Odômetro")
-    # Este é o gráfico de "bolinhas" que você perguntou!
-    fig2 = px.scatter(filtered_df, x="odometer", y="price", color="condition",
-                     hover_data=['model_year', 'model'],
-                     title="Impacto da Quilometragem no Valor",
-                     labels={'odometer': 'Milhas Rodadas', 'price': 'Preço ($)'})
-    st.plotly_chart(fig2, use_container_width=True)
+    st.subheader("Impacto da Tração 4x4")
+    fig_box = px.box(filtered_df, x="is_4wd", y="price", color="is_4wd",
+                    title="Distribuição de Valor: Com vs. Sem 4x4",
+                    labels={'is_4wd': 'Tração 4x4', 'price': 'Preço ($)'})
+    st.plotly_chart(fig_box, use_container_width=True)
 
-# 5. ANÁLISE DE ATRIBUTOS (4x4 e Cor)
-st.markdown("---")
-st.header("🔍 O que valoriza o veículo?")
+# 6. DEPRECIAÇÃO E TENDÊNCIAS
+st.header("3. 📉 Ciclo de Vida e Depreciação")
 
-tab1, tab2 = st.tabs(["Tração 4x4", "Cores & Estética"])
+tab1, tab2 = st.tabs(["Uso vs. Valor", "Evolução Temporal"])
 
 with tab1:
-    # Gráfico para medir se 4x4 ajuda a vender mais caro
-    avg_4wd = filtered_df.groupby('is_4wd')['price'].median().reset_index()
-    avg_4wd['is_4wd'] = avg_4wd['is_4wd'].map({1: 'Com 4x4', 0: 'Sem 4x4'})
-    fig_4wd = px.bar(avg_4wd, x='is_4wd', y='price', color='is_4wd',
-                    title="Mediana de Preço por Tipo de Tração")
-    st.plotly_chart(fig_4wd)
-    st.write("**Interpretação:** A mediana ajuda a ignorar valores muito discrepantes e focar no 'preço real' do mercado.")
+    st.markdown("Análise da correlação entre quilometragem (odômetro) e o preço de revenda, segmentada pela condição declarada.")
+    fig_scatter = px.scatter(filtered_df, x="odometer", y="price", color="condition",
+                             alpha=0.4, hover_data=['model_year', 'model'],
+                             title="Dispersão: Preço x Quilometragem",
+                             labels={'odometer': 'Milhas Rodadas', 'price': 'Preço ($)'})
+    st.plotly_chart(fig_scatter, use_container_width=True)
 
 with tab2:
-    # Análise de cores
-    fig_color = px.box(filtered_df, x="paint_color", y="price", 
-                      title="Distribuição de Preços por Cor",
-                      labels={'paint_color': 'Cor', 'price': 'Preço ($)'})
-    st.plotly_chart(fig_color, use_container_width=True)
+    st.markdown("Visualização da tendência de preço médio baseada no ano de fabricação do modelo.")
+    trend_df = filtered_df.groupby('model_year')['price'].mean().reset_index()
+    fig_line = px.line(trend_df, x='model_year', y='price',
+                      title="Valor Médio de Mercado por Ano do Modelo",
+                      labels={'model_year': 'Ano de Fabricação', 'price': 'Preço Médio ($)'})
+    st.plotly_chart(fig_line, use_container_width=True)
 
-# 6. ANÁLISE DE TEMPO (O QUE VOCÊ PEDIU)
-st.header("⏳ Análise de Tempo e Depreciação")
-# Gráfico de linha para ver Ano vs Preço Médio
-trend_df = filtered_df.groupby('model_year')['price'].mean().reset_index()
-fig_line = px.line(trend_df, x='model_year', y='price',
-                  title="Evolução do Valor Médio por Ano do Modelo",
-                  labels={'model_year': 'Ano do Carro', 'price': 'Preço Médio'})
-st.plotly_chart(fig_line, use_container_width=True)
-
-# 7. VALIDAÇÃO E MÉTRICAS
-st.markdown("---")
+# 7. MÉTRICAS DE RESUMO
+st.divider()
 m1, m2, m3 = st.columns(3)
-m1.metric("Veículos Exibidos", len(filtered_df))
-m2.metric("Preço Médio", f"${filtered_df['price'].mean():,.2f}")
-m3.metric("Tempo Médio de Venda", f"{filtered_df['days_listed'].mean():.1f} dias")
-
+m1.metric("Volume da Amostra", f"{len(filtered_df)} veículos")
+m2.metric("Preço Médio", f"${filtered_df['price'].mean():,.0f}")
+m3.metric("Média de Dias Ativos", f"{filtered_df['days_listed'].mean():.1f} dias")
