@@ -31,7 +31,7 @@ st.divider()
 
 # 3. FILTROS E CONTROLES
 st.sidebar.header("Parâmetros de Pesquisa")
-price_limit = st.sidebar.slider("Filtrar por Preço Máximo ($)", 500, 100, 150000, value=50000)
+price_limit = st.sidebar.slider("Filtrar por Preço Máximo ($)", min_value=500, max_value=150000, value=50000)
 filtered_df = df[df['price'] <= price_limit]
 
 # 4. ANÁLISE DE LIQUIDEZ (Giro de Estoque)
