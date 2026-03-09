@@ -73,9 +73,10 @@ st.header("3. 📉 Ciclo de Vida e Depreciação")
 tab1, tab2 = st.tabs(["Uso vs. Valor", "Evolução Temporal"])
 
 with tab1:
-    st.markdown("Análise da correlação entre quilometragem (odômetro) e o preço de revenda, segmentada pela condição declarada.")
+    st.markdown("Análise da correlação entre quilometragem (odômetro) e o preço de revenda.")
+    # CORREÇÃO AQUI: alpha mudou para opacity
     fig_scatter = px.scatter(filtered_df, x="odometer", y="price", color="condition",
-                             alpha=0.4, hover_data=['model_year', 'model'],
+                             opacity=0.4, hover_data=['model_year', 'model'],
                              title="Dispersão: Preço x Quilometragem",
                              labels={'odometer': 'Milhas Rodadas', 'price': 'Preço ($)'})
     st.plotly_chart(fig_scatter, use_container_width=True)
