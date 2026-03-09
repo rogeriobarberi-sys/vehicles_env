@@ -1,6 +1,9 @@
-# US Vehicle Market - Interactive EDA Dashboard
+# US Vehicle Market - Strategic Data Analysis Dashboard
 
 An advanced Exploratory Data Analysis (EDA) web application built with **Streamlit** and **Plotly**. This project goes beyond basic visualization, implementing robust data cleaning and statistical imputation to provide reliable market insights.
+
+## 🚀 Live Demo
+https://vehicles-env-1niq.onrender.com
 
 ## 🛠 Tech Stack
 - **Python** (Pandas, Pathlib)
@@ -18,13 +21,14 @@ Instead of simply dropping rows with missing values, I applied a **context-aware
 - **Odometer:** Missing mileage was imputed based on the **median** for the corresponding `model_year`, reflecting the logical correlation between a car's age and its usage.
 - **Boolean Features:** The `is_4wd` column was standardized, treating nulls as `0` (False) based on the dataset's structure.
 
-### 2. Defensive Programming & Data Types
-- Implemented a robust file path resolution using `pathlib` for seamless deployment on **Render/GitHub**.
-- Enforced strict numeric typing for `price`, `odometer`, and `model_year` to prevent runtime errors during interactive filtering.
+### 2. Feature Engineering & Defensive Programming
+- **Brand Extraction:** Extracted vehicle brands from the model strings to allow high-level market segmentation and brand-specific analysis.
+- **Pathlib Integration:** Implemented robust file path resolution using `pathlib` for seamless deployment on Render/GitHub environments.
+- **Data Typing:** Enforced strict numeric typing for `price`, `odometer`, and `model_year` to prevent runtime errors during interactive filtering.
 
-### 3. Advanced Visualization Logic
+### 3. Advanced Visualization & Business Logic
 - **Depreciation Analysis:** A scatter plot with a "Condition" overlay to visualize how wear and tear affects resale value.
-- **Market Segmentation:** Boxplots to identify price outliers and distribution across different vehicle types (SUV, Truck, Sedan, etc.).
+- **Market Liquidity Analysis:** Calculated the "Time-to-Sell" (Days Listed) for each vehicle category, identifying which types have the highest turnover.
+- **Outlier Detection:** Used Boxplots to identify price outliers and distribution consistency across different vehicle types.
 
----
-*Note: This project was developed as part of the TripleTen Data Analytics Bootcamp, enhanced with custom features for professional portfolio standards.*
+## 📁 Repository Structure
