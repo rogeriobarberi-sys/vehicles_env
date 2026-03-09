@@ -47,7 +47,7 @@ filtered_df = df[df['price'] <= price_limit]
 if selected_makes:
     filtered_df = filtered_df[filtered_df['make'].isin(selected_makes)]
 
-# 4. ANÁLISE DE LIQUIDEZ E GIRO (O que você gostou)
+# 4. ANÁLISE DE LIQUIDEZ E GIRO 
 st.header("1. 📈 Liquidez: Giro de Estoque por Categoria")
 st.info("Veículos com menor 'Média de Dias' possuem maior demanda e saem do pátio mais rápido.")
 
@@ -57,6 +57,17 @@ fig_liq = px.bar(liquidity_df, x='days_listed', y='type', orientation='h',
                  labels={'days_listed': 'Média de Dias', 'type': 'Categoria'},
                  color='days_listed', color_continuous_scale='Bluered_r')
 st.plotly_chart(fig_liq, use_container_width=True)
+
+#4.5 ANÁLISE DE CONSERVAÇÃO Vs TEMPO
+st.header("5. ⚡ Agilidade de Venda por Estado de Conservação")
+st.markdown("Será que carros em melhor estado vendem mais rápido? O gráfico abaixo mostra a distribuição do tempo de anúncio para cada condição.")
+
+fig_cond_time = px.strip(filtered_df, x='condition', y='days_listed', color='condition',
+                         title="Dispersão de Dias no Anúncio por Condição",
+                         labels={'condition': 'Condição', 'days_listed': 'Dias até Venda'})
+st.plotly_chart(fig_cond_time, use_container_width=True)
+
+st.info("**Conclusão:** Observe se há uma concentração maior de pontos na parte inferior para condições específicas. Isso indica um giro de estoque mais acelerado para esse perfil de veículo.")
 
 # 5. ESTRUTURA DE PREÇOS (COM TOGGLE)
 st.header("2. 📊 Análise de Precificação")
