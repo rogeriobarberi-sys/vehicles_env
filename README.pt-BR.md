@@ -1,103 +1,30 @@
-# Vehicles US — Análise Exploratória (EDA) + App Interativo
+# Mercado de Veículos EUA - Dashboard de Análise Exploratória (EDA)
 
-Este repositório contém um projeto de **Análise Exploratória de Dados (EDA)** com um **aplicativo interativo em Streamlit**, usando o dataset **Vehicles US**.  
-O objetivo é explorar o conjunto de dados, documentar decisões de qualidade (tipos, ausências, possíveis outliers) e entregar visualizações interativas que sustentem conclusões claras.
+Uma aplicação web avançada de Análise Exploratória de Dados construída com **Streamlit** e **Plotly**. Este projeto vai além da visualização básica, implementando limpeza de dados robusta e imputação estatística para fornecer insights de mercado confiáveis.
 
-## Links
+## 🛠 Tecnologias Utilizadas
+- **Python** (Pandas, Pathlib)
+- **Streamlit** (Interface Web e Implementação)
+- **Plotly Express** (Gráficos Interativos)
+- **Render** (Hospedagem em Nuvem)
 
-- **Aplicativo (Render):** https://vehicles-env-1niq.onrender.com  
-- **Repositório (GitHub):** https://github.com/rogeriobarberi-sys/vehicles_env  
-- **README em inglês:** [README.md](README.md)
+## 📊 Engenharia e Limpeza de Dados (Abordagem Profissional)
 
----
+Para garantir uma análise de alta qualidade e manter padrões de um portfólio profissional, as seguintes etapas de integridade de dados foram implementadas:
 
-## Objetivos do projeto
+### 1. Imputação de Dados Robusta (Baseada em Grupos)
+Em vez de simplesmente descartar linhas com valores ausentes, apliquei uma estratégia de **imputação contextual**:
+- **Ano do Modelo e Cilindros:** Valores ausentes foram preenchidos usando a **mediana** de cada `modelo` de veículo específico. Isso preserva a distribuição característica de cada tipo de carro.
+- **Odômetro:** A quilometragem ausente foi imputada com base na **mediana** do `ano_do_modelo` correspondente, refletindo a correlação lógica entre a idade do carro e seu uso.
+- **Atributos Booleanos:** A coluna `is_4wd` foi padronizada, tratando nulos como `0` (Falso) com base na estrutura do conjunto de dados.
 
-- Construir um fluxo de EDA **reprodutível**
-- Identificar e documentar **problemas de qualidade** (valores ausentes, tipos, valores extremos)
-- Criar **visualizações interativas** para apoiar a análise
-- Publicar um app web funcional como peça **de portfólio**
+### 2. Programação Defensiva e Tipagem
+- Implementação de resolução de caminhos de arquivo robusta usando `pathlib` para garantir o funcionamento perfeito no **Render/GitHub**.
+- Aplicação de tipagem numérica rigorosa para `preço`, `odômetro` e `ano_do_modelo` para evitar erros durante a filtragem interativa.
 
----
-
-## Dataset
-
-- Arquivo: `vehicles_us.csv`  
-- Contexto: anúncios/listagens de veículos usados com campos como **preço**, **odômetro**, **ano do modelo**, **condição**, etc.
-
----
-
-## Funcionalidades do app (EDA interativa)
-
-O app em Streamlit permite:
-
-- Visualizar uma **amostra dos dados** (tabela) após aplicar filtros
-- Inspecionar **valores ausentes** por coluna
-- Consultar **estatísticas descritivas** das colunas numéricas
-- Interagir com controles de interface (ex.: **checkbox**, filtros)
-- Explorar pelo menos duas visualizações:
-  - **Histograma** (ex.: distribuição de `price`)
-  - **Gráfico de dispersão** (ex.: `price` vs `odometer`)
+### 3. Lógica de Visualização Avançada
+- **Análise de Depreciação:** Gráfico de dispersão com sobreposição de "Condição" para visualizar como o desgaste afeta o valor de revenda.
+- **Segmentação de Mercado:** Boxplots para identificar outliers de preço e a distribuição entre diferentes tipos de veículos (SUV, Caminhão, Sedan, etc.).
 
 ---
-
-## Limpeza e pré-processamento (decisões documentadas)
-
-A proposta do projeto é evitar “mágica escondida” e aplicar decisões de forma transparente.
-
-### 1) Tipos de dados
-- Validar colunas numéricas (ex.: `price`, `odometer`, `model_year`) como numéricas
-- Confirmar colunas categóricas (ex.: `condition`) como texto/categoria
-
-### 2) Valores ausentes
-- Medir a quantidade de valores ausentes por coluna
-- Para gráficos que exigem valores completos (ex.: dispersão), linhas com `x` ou `y` ausentes são removidas **apenas naquele gráfico**, e não no dataset inteiro
-
-### 3) Outliers (abordagem pragmática)
-- Inspecionar valores extremos (preços muito altos / odômetro muito alto)
-- Evitar apagar linhas “só para ficar bonito”; aplicar filtros apenas quando fizer sentido analítico e de forma explícita
-
-> **Nota:** credibilidade de portfólio vem de decisões claras e justificadas, não de gráficos “perfeitos”.
-
----
-
-## Principais conclusões (substitua pelos seus achados reais)
-
-Inclua 3–6 bullets com o que você realmente observou. Estrutura exemplo:
-
-- A distribuição de **preço** é assimétrica (concentração em faixas mais baixas)
-- Em geral, **maior quilometragem** tende a associar-se a **menor preço**, com variações por condição
-- A **condição** do veículo sugere faixas de preço distintas e impacta fortemente o valor
-
----
-
-## Tecnologias
-
-- **Python**
-- **Pandas**
-- **Streamlit**
-- **Plotly**
-
----
-
-## Como rodar localmente
-
-1. Clone o repositório:
-   - `git clone https://github.com/rogeriobarberi-sys/vehicles_env.git`
-2. Entre na pasta do projeto:
-   - `cd vehicles_env`
-3. Instale as dependências:
-   - `pip install -r requirements.txt`
-4. Rode o app:
-   - `streamlit run app.py`
-
----
-
-## Estrutura do repositório
-
-- `app.py` — app em Streamlit (EDA interativa + gráficos)
-- `EDA.ipynb` — notebook com análise exploratória
-- `vehicles_us.csv` — dataset usado pelo app
-- `requirements.txt` — dependências Python
-- `render.yaml` — configuração de deploy no Render
-- `.streamlit/` — configuração do Streamlit (tema/ajustes)
+*Nota: Este projeto foi desenvolvido como parte do Bootcamp de Análise de Dados da TripleTen, aprimorado com funcionalidades personalizadas para atingir padrões de portfólio profissional.*
