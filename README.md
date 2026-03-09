@@ -1,20 +1,30 @@
-## Data Cleaning & Preprocessing (Documented Decisions)
+# US Vehicle Market - Interactive EDA Dashboard
 
-The purpose of this stage is to keep the analysis **reproducible** and the criteria **transparent**, avoiding changes that could distort results.
+An advanced Exploratory Data Analysis (EDA) web application built with **Streamlit** and **Plotly**. This project goes beyond basic visualization, implementing robust data cleaning and statistical imputation to provide reliable market insights.
 
-### 1) Data types
-- Validate and standardize numeric columns (e.g., `price`, `odometer`, `model_year`) as numeric types when applicable
-- Confirm categorical columns (e.g., `condition`) as text/categories
+## 🛠 Tech Stack
+- **Python** (Pandas, Pathlib)
+- **Streamlit** (Web Interface & Deployment)
+- **Plotly Express** (Interactive Graphics)
+- **Render** (Cloud Hosting)
 
-### 2) Missing values
-- Measure missingness by column
-- For visualizations that require complete pairs (e.g., scatter plots), rows with missing `x` or `y` values are removed **only for that chart**, preserving the dataset for other analyses
+## 📊 Data Engineering & Cleaning (Professional Approach)
 
-### 3) Extreme values (outliers) — criteria-driven approach
-- Inspect extreme values (e.g., very high prices / very high mileage) to assess plausibility and their impact on chart readability
-- Apply filtering only with **clear analytical justification** (e.g., improving interpretability without introducing bias), keeping the rules explicit in the app/notebook
+To ensure high-quality analysis and maintain a professional-grade portfolio, the following data integrity steps were implemented:
 
-> **Note:** Any exclusion or filtering rules should be transparent and justified so the analysis can be reviewed by third parties.
+### 1. Robust Data Imputation (Group-based)
+Instead of simply dropping rows with missing values, I applied a **context-aware imputation** strategy:
+- **Model Year & Cylinders:** Missing values were filled using the **median** value of each specific vehicle `model`. This preserves the characteristic distribution of each car type.
+- **Odometer:** Missing mileage was imputed based on the **median** for the corresponding `model_year`, reflecting the logical correlation between a car's age and its usage.
+- **Boolean Features:** The `is_4wd` column was standardized, treating nulls as `0` (False) based on the dataset's structure.
 
-## Versão em português (PT-BR version)
-A versão em português está em README.pt-BR.md.
+### 2. Defensive Programming & Data Types
+- Implemented a robust file path resolution using `pathlib` for seamless deployment on **Render/GitHub**.
+- Enforced strict numeric typing for `price`, `odometer`, and `model_year` to prevent runtime errors during interactive filtering.
+
+### 3. Advanced Visualization Logic
+- **Depreciation Analysis:** A scatter plot with a "Condition" overlay to visualize how wear and tear affects resale value.
+- **Market Segmentation:** Boxplots to identify price outliers and distribution across different vehicle types (SUV, Truck, Sedan, etc.).
+
+---
+*Note: This project was developed as part of the TripleTen Data Analytics Bootcamp, enhanced with custom features for professional portfolio standards.*
