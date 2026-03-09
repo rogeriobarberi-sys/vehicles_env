@@ -12,10 +12,7 @@ st.set_page_config(page_title="US Vehicles Market Analysis — Pro Portfolio", l
 # 2. CARREGAMENTO E LIMPEZA (DATA ENGINEERING)
 # ==============================================================================
 BASE_DIR = Path(__file__).resolve().parent
-<<<<<<< HEAD
-# Tentamos encontrar o arquivo com dois nomes possíveis (comum em diferentes sprints)
-=======
->>>>>>> 7794253ef543abae5660ad45449d4ff5143d00ab
+
 CANDIDATE_FILES = [BASE_DIR / "vehicles_us.csv", BASE_DIR / "vehicles.csv"]
 DATA_PATH = next((p for p in CANDIDATE_FILES if p.exists()), None)
 
@@ -41,10 +38,7 @@ def load_and_clean_data(path):
         data["date_posted"] = pd.to_datetime(data["date_posted"], errors="coerce")
 
     # IMPUTAÇÃO POR GRUPO (Data Imputation)
-<<<<<<< HEAD
-    # Preenchemos nulos com a mediana baseada no modelo, preservando a lógica do mercado.
-=======
->>>>>>> 7794253ef543abae5660ad45449d4ff5143d00ab
+
     data['model_year'] = data['model_year'].fillna(data.groupby('model')['model_year'].transform('median'))
     data['cylinders'] = data['cylinders'].fillna(data.groupby('model')['cylinders'].transform('median'))
     data['odometer'] = data['odometer'].fillna(data.groupby('model_year')['odometer'].transform('median'))
@@ -142,8 +136,4 @@ st.plotly_chart(fig_liq, use_container_width=True)
 with st.expander("Explore Processed Data Table"):
     st.dataframe(filtered.head(50), use_container_width=True)
 
-<<<<<<< HEAD
-st.caption("Developed for Professional Portfolio. Data Source: Vehicles US Dataset.")
-=======
-st.caption("Developed for Professional Portfolio. Data Source: Vehicles US Dataset.")    st.dataframe(df[numeric_cols].describe().T)
->>>>>>> 7794253ef543abae5660ad45449d4ff5143d00ab
+
