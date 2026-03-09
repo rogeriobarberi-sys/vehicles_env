@@ -121,7 +121,30 @@ with col_line:
 
 # 8. MÉTRICAS FINAIS
 st.divider()
-m1, m2, m3 = st.columns(3)
+m1, m2, m3, m4 = st.columns(4)
 m1.metric("Amostra Filtrada", f"{len(filtered_df)} veículos")
 m2.metric("Preço Médio", f"${filtered_df['price'].mean():,.0f}")
-m3.metric("Média de Dias Ativos", f"{filtered_df['days_listed'].mean():.1f} dias")
+m3.metric("Preço Máximo", f"${filtered_df['price'].max():,.0f}")
+m4.metric("Média de Dias Ativos", f"{filtered_df['days_listed'].mean():.1f} dias")
+#
+# --- RODAPÉ ANALÍTICO E CRÉDITOS ---
+st.divider()
+
+# Linha de Marcas Selecionadas
+if selected_makes:
+    marcas_texto = ", ".join(selected_makes)
+else:
+    marcas_texto = "Todas as marcas disponíveis"
+
+st.write(f"**Marcas selecionadas:** {marcas_texto}")
+
+# Linha final de créditos estilizada
+st.markdown("---")
+st.markdown(
+    """
+    <div style='text-align: right; color: gray; font-size: 0.8rem;'>
+        <i>by: Rogério Barberi</i>
+    </div>
+    """, 
+    unsafe_allow_html=True
+)
