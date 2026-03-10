@@ -5,6 +5,12 @@ Uma aplicação web de **Business Intelligence** construída com **Streamlit** e
 ## 🚀 Demonstração ao Vivo
 [https://vehicles-env-1niq.onrender.com](https://vehicles-env-1niq.onrender.com)
 
+
+## 🚀 O que este projeto resolve?
+O objetivo foi transformar uma base de dados de anúncios em insights para revendedores, respondendo perguntas como:
+* Quais categorias de veículos vendem mais rápido?
+* Qual o impacto real da tração 4x4 no preço de revenda?
+* Como a quilometragem e a cor influenciam a depreciação do ativo?
 ---
 
 ## 🛠 Tecnologias Utilizadas
@@ -44,6 +50,15 @@ O dashboard foi projetado para responder a perguntas estratégicas de mercado:
 * **Curva de Tendência Temporal:** Gráficos de linha que demonstram a variação do preço médio conforme o ano de fabricação, essencial para entender a depreciação anual.
 
 ---
+
+## 🎯 Resultados da Análise (Business Insights)
+
+Diferente de uma simples visualização de dados, este projeto extraiu padrões acionáveis para o mercado de usados:
+
+* **Giro de Estoque:** Identificamos que **Trucks e Pickups até $30k** são os ativos de maior liquidez (venda mais rápida).
+* **Valor Agregado:** Veículos com **tração 4x4** apresentam uma mediana de preço até **100% superior** aos modelos 4x2.
+* **Curva de Depreciação:** Através de linhas de tendência *Lowess*, mapeamos que o "ponto cego" de desvalorização ocorre após as **150.000 milhas**, onde o estado de conservação perde relevância para o valor residual.
+* **Psicologia das Cores:** Cores vibrantes (Amarelo/Laranja) sinalizam nichos de alto ticket, enquanto o Roxo e Verde sofrem maior depreciação por baixa aceitação.
 
 ## 📁 Estrutura do Repositório
 * `app.py`: Código principal da aplicação Streamlit.
