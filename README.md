@@ -6,8 +6,7 @@
 ![Render](https://img.shields.io/badge/Render-%23000000.svg?style=for-the-badge&logo=render&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-%233F4F75.svg?style=for-the-badge&logo=plotly&logoColor=white)
 
-A **Business Intelligence** web application built with **Streamlit** and **Plotly**. 
-This project transforms a raw automotive listing dataset into a decision-making tool, utilizing advanced data engineering and interactive visualization techniques.
+A **Business Intelligence** web application built with **Streamlit** and **Plotly**. This project transforms a raw automotive listing dataset into a decision-making tool, utilizing advanced data engineering and interactive visualization techniques.
 
 ## 🚀 Live Demo
 [https://vehicles-env-1niq.onrender.com](https://vehicles-env-1niq.onrender.com)
@@ -31,17 +30,17 @@ The objective was to transform a listing database into actionable insights for c
 
 ## 📊 Data Engineering & Cleaning (Professional Approach)
 
-Data integrity is the foundation of reliable insights. I implemented a cleaning pipeline that prevents the loss of valuable information:
+Data integrity is the foundation of reliable insights. I implemented a cleaning pipeline that prevents information loss through **Contextual Statistical Imputation**, rather than simple row deletion:
 
-### 1. Contextual Group-based Imputation
-To avoid the bias of simply deleting incomplete rows, I utilized **statistical imputation**:
-* **Model Year & Cylinders:** Missing values were filled using the **median by model** (`groupby('model')`), ensuring a sedan doesn't receive truck specifications.
-* **Odometer:** Mileage was imputed based on the **median model year**, respecting the natural correlation between age and usage.
-* **Boolean Normalization:** The `is_4wd` column was normalized (nulls to `0`), enabling precise binary analysis of value appreciation.
+### 1. Group-based Median Imputation
+To maintain dataset distribution and avoid bias, missing values were handled using **group-level statistics**:
+* **Model Year & Cylinders:** Missing values were filled using the **median by model** (`groupby('model')`). This ensures a *sedan* doesn't erroneously receive *truck* specifications.
+* **Odometer:** Mileage was imputed based on the **median per model year**, respecting the high correlation between a vehicle's age and its usage.
+* **Boolean Normalization:** The `is_4wd` column was transformed (nulls to `0`), enabling precise binary analysis of the financial impact of all-wheel drive.
 
-### 2. Defensive Programming & Optimization
-* **Path Resolution (Pathlib):** The system automatically detects the environment (Local vs. Render) to locate `.csv` files, eliminating directory errors.
-* **Data Caching (`@st.cache_data`):** Implemented caching so that loading and processing 51,525 rows occurs only once, making the user experience instantaneous.
+### 2. Defensive Programming & System Optimization
+* **Environment-Aware Pathing:** Using `pathlib`, the application automatically detects the environment (Local vs. Cloud/Render) to locate datasets, ensuring cross-platform stability.
+* **Performance Caching (`@st.cache_data`):** Implemented Streamlit's caching layer to ensure that loading and processing 51,000+ rows occurs only once, providing a sub-second interactive experience for the end-user.
 
 ---
 
@@ -50,20 +49,16 @@ To avoid the bias of simply deleting incomplete rows, I utilized **statistical i
 The dashboard was designed to answer strategic market questions:
 
 * **Value-Added Analysis (4WD):** We measured the financial impact of all-wheel drive on resale prices using **Boxplots**, allowing for the identification of median values and price dispersion (outliers).
-* **Mileage Impact (Depreciation):** Interactive scatter plots correlating vehicle usage with value, segmented by condition (Excellent, Good, Fair) using **Lowess trendlines**.
+* **Mileage Impact (Depreciation):** Interactive scatter plots correlating vehicle usage with value, segmented by condition using **Lowess trendlines**.
 * **Liquidity Analysis (Time to Sell):** Study of `days_listed` to understand which price ranges and vehicle types have the highest inventory turnover.
-* **Temporal Trend Curves:** Line charts demonstrating average price variation by manufacture year, essential for understanding annual depreciation.
 
 ---
 
 ## 💡 Key Business Insights
 
-Beyond simple visualization, this project extracted actionable patterns:
-
-* **Inventory Turnover:** We identified that **Trucks and Pickups under $30k** are the highest liquidity assets (fastest sales).
+* **Inventory Turnover:** Trucks and Pickups under $30k are the highest liquidity assets (fastest sales).
 * **Price Premium:** Vehicles with **4WD** show a median price up to **100% higher** than 4x2 models.
 * **Depreciation Curve:** Using *Lowess* trendlines, we mapped that the "blind spot" for depreciation occurs after **150,000 miles**, where condition becomes secondary to residual functional value.
-* **Color Psychology:** Vibrant colors (Yellow/Orange) signal high-ticket niches, while Purple and Green suffer higher depreciation due to lower market acceptance.
 
 ---
 
